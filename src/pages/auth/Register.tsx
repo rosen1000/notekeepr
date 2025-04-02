@@ -29,11 +29,11 @@ export default function Register() {
 	useEffect(() => {
 		const { success, error } = schema.safeParse(formData);
 		if (success) return setErrors({});
-		const { password, repeat, username } = error.format();
+		const { password, username, _errors } = error.format();
 		setErrors({
 			username: formData.username != undefined ? username?._errors.join('\n') : '',
 			password: formData.password != undefined ? password?._errors.join('\n') : '',
-			repeat: formData.repeat != undefined ? repeat?._errors.join('\n') : '',
+			repeat: formData.repeat != undefined ? _errors.join('\n') : '',
 		});
 	}, [formData]);
 
@@ -45,6 +45,8 @@ export default function Register() {
 	const submit = (e: FormEvent<HTMLFormElement>) => {
 		e.preventDefault();
 		const { success } = schema.safeParse(formData);
+		console.log(formData);
+
 		if (!success) return;
 		// TODO: Make API call
 	};
@@ -53,13 +55,22 @@ export default function Register() {
 		<Mui.Card className='p-8' sx={{ borderRadius: '8px' }}>
 			<h1 className='mb-8'>Register</h1>
 			<form onSubmit={submit} className='flex flex-col gap-4'>
-				<Mui.TextField required name='username' label='Username' placeholder='Enter your username' />
+				<Mui.TextField
+					required
+					name='username'
+					label='Username'
+					placeholder='Enter your username'
+					onChange={change}
+					error={!!errors.username}
+					helperText={errors.username}
+				/>
 				<Mui.FormControl error={!!errors.password}>
 					<Mui.InputLabel required htmlFor='password'>
 						Password
 					</Mui.InputLabel>
 					<Mui.OutlinedInput
 						id='password'
+						required
 						name='password'
 						type={showPassword ? 'text' : 'password'}
 						label='Password'
@@ -79,10 +90,21 @@ export default function Register() {
 					/>
 					<Mui.FormHelperText className='whitespace-pre'>{errors.password}</Mui.FormHelperText>
 				</Mui.FormControl>
-				<Mui.TextField required name='repeat' label='Repeat Password' placeholder='Enter your password again' />
+				<Mui.TextField
+					required
+					name='repeat'
+					label='Repeat Password'
+					placeholder='Enter your password again'
+					type={showPassword ? 'text' : 'password'}
+					onChange={change}
+					error={!!errors.repeat}
+					helperText={errors.repeat}
+				/>
 				<div className='flex justify-between'>
 					<Mui.Button onClick={() => navigate('/auth/login')}>Login</Mui.Button>
-					<Mui.Button variant='contained'> Register </Mui.Button>
+					<Mui.Button type='submit' variant='contained'>
+						Register
+					</Mui.Button>
 				</div>
 			</form>
 		</Mui.Card>
