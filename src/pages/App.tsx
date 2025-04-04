@@ -1,4 +1,5 @@
 import { Button } from '@mui/material';
+import { Icon } from '@iconify/react';
 import { useNavigate } from 'react-router';
 import './App.css';
 
@@ -7,7 +8,7 @@ function App() {
 
 	return (
 		<div className='flex flex-col gap-8 items-center justify-center h-screen'>
-			<h1 className='text-8xl'>Notekeepr</h1>
+			<h1 className='text-8xl'>Notekeepr <Icon icon="twemoji:memo" className='inline' /></h1>
 			<span className='flex flex-col gap-4 w-64'>
 				<Button onClick={() => navigate('/note')} variant='contained' size='large'>
 					Begin
