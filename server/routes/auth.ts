@@ -8,6 +8,7 @@ export default (app: typeof main) => {
 		'/login',
 		{ schema: { body: z.object({ username: z.string(), password: z.string() }) } },
 		async (req, res) => {
+			console.log(req.body);
 			const user = await db.user.findUnique({
 				where: { username: req.body.username },
 			});
@@ -16,6 +17,7 @@ export default (app: typeof main) => {
 			}
 
 			const token = app.jwt.sign({ username: user.username });
+			res.setCookie('Authorization', token);
 			return res.status(200).send(token);
 		}
 	);
@@ -44,8 +46,25 @@ export default (app: typeof main) => {
 					password: hashedPassword,
 				},
 			});
+
 			const token = app.jwt.sign({ username: req.body.username });
 			return res.status(201).send(token);
 		}
 	);
+
+	app.get('/me', async (req, res) => {
+		try {
+			let jwt = (await req.jwtVerify()) as JwtPayload;
+			let user = db.user.findFirst({
+				where: {
+					username: jwt.username,
+				},
+				omit: { password: true },
+			});
+			return user;
+		} catch (e) {
+			app.log.error(e);
+			return 'error';
+		}
+	});
 };
