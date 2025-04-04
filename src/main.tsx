@@ -6,9 +6,10 @@ import { createRoot } from 'react-dom/client';
 import { createTheme, CssBaseline, ThemeProvider } from '@mui/material';
 import { StrictMode } from 'react';
 import './index.css';
+import { green, pink } from '@mui/material/colors';
 
 const theme = createTheme({
-	palette: { mode: 'dark' },
+	palette: { mode: 'dark', primary: green, secondary: pink },
 });
 
 createRoot(document.getElementById('root')!).render(

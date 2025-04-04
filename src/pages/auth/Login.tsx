@@ -48,50 +48,52 @@ export default function Login() {
 	};
 
 	return (
-		<Mui.Card className='p-8' sx={{ borderRadius: '8px' }}>
-			<h1 className='mb-8'> Login </h1>
-			<form onSubmit={submit} className='flex flex-col gap-4'>
-				<Mui.TextField
-					required
-					name='username'
-					label='Username'
-					placeholder='Enter your username'
-					onChange={change}
-					error={!!errors.username}
-					helperText={errors.username}
-				/>
-				<Mui.FormControl error={!!errors.password}>
-					<Mui.InputLabel required htmlFor='password'>
-						Password
-					</Mui.InputLabel>
-					<Mui.OutlinedInput
-						id='password'
-						name='password'
-						type={showPassword ? 'text' : 'password'}
-						label='Password'
-						placeholder='Enter your password'
+		<div className='flex flex-col items-center justify-center h-screen'>
+			<Mui.Card className='p-8' sx={{ borderRadius: '8px' }}>
+				<h1 className='text-4xl font-bold text-center mb-8'> Login </h1>
+				<form onSubmit={submit} className='flex flex-col gap-4'>
+					<Mui.TextField
+						required
+						name='username'
+						label='Username'
+						placeholder='Enter your username'
 						onChange={change}
-						endAdornment={
-							<Mui.InputAdornment position='end'>
-								<Mui.IconButton
-									aria-label={showPassword ? 'hide the password' : 'display the password'}
-									onClick={toggleShowPassword}
-									edge='end'
-								>
-									{showPassword ? <VisibilityOff /> : <Visibility />}
-								</Mui.IconButton>
-							</Mui.InputAdornment>
-						}
+						error={!!errors.username}
+						helperText={errors.username}
 					/>
-					<Mui.FormHelperText className='whitespace-pre'>{errors.password}</Mui.FormHelperText>
-				</Mui.FormControl>
-				<div className='flex justify-between'>
-					<Mui.Button onClick={() => navigate('/auth/register')}> Register </Mui.Button>
-					<Mui.Button type='submit' variant='contained'>
-						Login
-					</Mui.Button>
-				</div>
-			</form>
-		</Mui.Card>
+					<Mui.FormControl error={!!errors.password}>
+						<Mui.InputLabel required htmlFor='password'>
+							Password
+						</Mui.InputLabel>
+						<Mui.OutlinedInput
+							id='password'
+							name='password'
+							type={showPassword ? 'text' : 'password'}
+							label='Password'
+							placeholder='Enter your password'
+							onChange={change}
+							endAdornment={
+								<Mui.InputAdornment position='end'>
+									<Mui.IconButton
+										aria-label={showPassword ? 'hide the password' : 'display the password'}
+										onClick={toggleShowPassword}
+										edge='end'
+									>
+										{showPassword ? <VisibilityOff /> : <Visibility />}
+									</Mui.IconButton>
+								</Mui.InputAdornment>
+							}
+						/>
+						<Mui.FormHelperText className='whitespace-pre'>{errors.password}</Mui.FormHelperText>
+					</Mui.FormControl>
+					<div className='flex justify-between'>
+						<Mui.Button onClick={() => navigate('/auth/register')}> Register </Mui.Button>
+						<Mui.Button type='submit' variant='contained'>
+							Login
+						</Mui.Button>
+					</div>
+				</form>
+			</Mui.Card>
+		</div>
 	);
 }
