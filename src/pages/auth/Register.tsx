@@ -54,7 +54,7 @@ export default function Register() {
 	return (
 		<div className='flex flex-col  items-center justify-center h-screen'>
 			<Mui.Card className='p-8' sx={{ borderRadius: '8px' }}>
-				<h1 className='mb-8'>Register</h1>
+				<h1 className='text-4xl font-bold text-center mb-8'>Register</h1>
 				<form onSubmit={submit} className='flex flex-col gap-4'>
 					<Mui.TextField
 						required
