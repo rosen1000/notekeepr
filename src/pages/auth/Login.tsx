@@ -1,4 +1,5 @@
 import * as Mui from '@mui/material';
+import api from '../../utils/api';
 import z from 'zod';
 import { ChangeEvent, FormEvent, useEffect, useState } from 'react';
 import { passwordLength, passwordRegex } from '../../utils';
@@ -39,12 +40,19 @@ export default function Login() {
 		setFormData({ ...formData, [e.target.name]: e.target.value });
 	};
 
-	const submit = (e: FormEvent<HTMLFormElement>) => {
+	const submit = async (e: FormEvent<HTMLFormElement>) => {
 		e.preventDefault();
 		const { success } = schema.safeParse(formData);
 		if (!success) return;
-		// TODO: Make API call
-		console.log('Submit');
+
+		const res = await api.auth.login(formData.username!, formData.password!);
+		if (res.status >= 200 && res.status < 300) {
+			navigate('/note');
+		} else {
+			setErrors({
+				username: 'Invalid username or password',
+			});
+		}
 	};
 
 	return (
