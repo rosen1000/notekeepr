@@ -1,5 +1,5 @@
 import * as Mui from '@mui/material';
-import { useState } from 'react';
+import { useMemo, useState } from 'react';
 import { set } from '../../utils';
 import RichMarkdown from '../../components/RichMarkdown';
 
@@ -7,6 +7,11 @@ export default function NewNote() {
 	const [title, setTitle] = useState('');
 	const [content, setContent] = useState('');
 	const [options, setOptions] = useState({ mono: false });
+	const note = useMemo<Note>(() => ({ id: -1, title, content, options }), [title, content, options]);
+	const setNote = (n: React.SetStateAction<Note>) => {
+		if ('content' in n) setContent(n.content);
+		else setContent(n(note).content);
+	};
 
 	return (
 		<div className='flex flex-col items-center justify-center my-16 gap-8 lg:mx-[20vw] sm:mx-[10vw] mx-4'>
@@ -48,7 +53,7 @@ export default function NewNote() {
 			</Mui.Accordion>
 			{/* #endregion Note options */}
 
-			<RichMarkdown title={title} content={[content, setContent]} options={options} />
+			<RichMarkdown note={[note, setNote]} />
 		</div>
 	);
 }

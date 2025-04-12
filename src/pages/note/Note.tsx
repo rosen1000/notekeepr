@@ -3,7 +3,7 @@ import { useEffect, useRef, useState } from 'react';
 
 export default function Note() {
 	// TODO: Fetch note from somewhere
-	const [note, setNote] = useState<Note>({ id: '1', title: 'Note Title', content: '- [ ] Milk' });
+	const [note, setNote] = useState<Note>({ id: 1, title: 'Note Title', content: '- [ ] Milk' });
 	// WHY DO I HAVE TO DO THIS
 	let didMount = useRef(false);
 	useEffect(() => {

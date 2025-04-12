@@ -3,8 +3,8 @@ interface NoteOptions {
 }
 
 interface Note {
-	id: string;
+	id: number;
 	title: string;
 	content: string;
-	options?: NoteOptions;
+	options?: Partial<NoteOptions>;
 }
