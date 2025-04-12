@@ -3,6 +3,7 @@ import db from '../database';
 import { app as main } from '..';
 import { z } from 'zod';
 
+// TODO: use hashid for user ids
 export default (app: typeof main) => {
 	app.post(
 		'/login',
