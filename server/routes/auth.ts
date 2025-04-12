@@ -48,6 +48,7 @@ export default (app: typeof main) => {
 			});
 
 			const token = app.jwt.sign({ username: req.body.username });
+			res.setCookie('Authorization', token);
 			return res.status(201).send(token);
 		}
 	);
