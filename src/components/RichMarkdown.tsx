@@ -1,31 +1,36 @@
-import { Checkbox, FormControlLabel } from '@mui/material';
-import { Dispatch, SetStateAction, useMemo } from 'react';
 import Markdown from 'react-markdown';
 import remarkGfm from 'remark-gfm';
+import { Checkbox, FormControlLabel } from '@mui/material';
+import { set } from '../utils';
+import { useMemo, useState } from 'react';
 
 interface Props {
-	title: string;
-	content: [string, Dispatch<SetStateAction<string>>];
-	options: NoteOptions;
+	note: [Note, React.Dispatch<React.SetStateAction<Note>>];
 }
 
-export default function RichMarkdown({ title, content: [content, setContent], options }: Props) {
-	const markdown = useMemo(() => `# ${title}\n${content}`, [title, content]);
+export default function RichMarkdown({ note: [note, setNote] }: Props) {
+	const [_, rerender] = useState(0);
+	const markdown = useMemo(() => `# ${note.title}\n${note.content}`, [note.title, note.content]);
 	let taskId = 0;
 
 	function changeTaskList(id: number, value: boolean) {
 		const regex = /- \[[ x]\]/gm;
 		let found: number | undefined = -1;
 		for (let i = 0; i <= id; i++) {
-			found = regex.exec(content)?.index;
+			found = regex.exec(note.content)?.index;
 		}
 		if (found == undefined || found == -1) return;
 		found += 3;
-		setContent(content.slice(0, found) + (value ? 'x' : ' ') + content.slice(found + 1, content.length));
+		set(
+			setNote,
+			'content',
+			note.content.slice(0, found) + (value ? 'x' : ' ') + note.content.slice(found + 1, note.content.length)
+		);
+		rerender((v) => ++v);
 	}
 
 	return (
-		<div className={'prose prose-invert text-white! ' + (options.mono ? 'font-mono' : 'font-inherit')}>
+		<div className={'prose prose-invert text-white! ' + (note.options?.mono ? 'font-mono' : 'font-inherit')}>
 			<Markdown
 				remarkPlugins={[remarkGfm]}
 				components={{
