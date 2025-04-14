@@ -1,9 +1,12 @@
 import RichMarkdown from '../../components/RichMarkdown';
+import { Button } from '@mui/material';
 import { useEffect, useRef, useState } from 'react';
+import { useNavigate } from 'react-router';
 
 export default function Note() {
+	const navigate = useNavigate();
 	// TODO: Fetch note from somewhere
-	const [note, setNote] = useState<Note>({ id: 1, title: 'Note Title', content: '- [ ] Milk' });
+	const [note, setNote] = useState<Note>(null as unknown as Note);
 	// WHY DO I HAVE TO DO THIS
 	let didMount = useRef(false);
 	useEffect(() => {
@@ -18,9 +21,11 @@ export default function Note() {
 	return (
 		<div className='flex h-screen'>
 			{/* //#region Sidebar/Navigation */}
-			<div className='min-w-3xs border-r border-gray-600'>
+			<div className='flex flex-col items-center py-8 min-w-3xs border-r border-gray-600'>
 				{/* TODO: Get notes and build tree-like thing */}
-				Note sidebar
+				<Button size='large' variant='contained' onClick={() => navigate('/note/new')}>
+					Compose
+				</Button>
 			</div>
 			{/* //#endregion */}
 
@@ -31,7 +36,7 @@ export default function Note() {
 						<RichMarkdown note={[note, setNote]} />
 					</div>
 				) : (
-					<div className='p-4 bg-gray-800 rounded-md shadow-lg'>No note selected.</div>
+					<div className='p-8 bg-gray-800 rounded-md shadow-lg'>No note selected.</div>
 				)}
 			</div>
 			{/* //#endregion */}
