@@ -29,6 +29,9 @@ importers:
       fastify-zod-openapi:
         specifier: ^4.1.1
         version: 4.1.1(fastify@5.2.2)(zod-openapi@4.2.4(zod@3.24.2))(zod@3.24.2)
+      hashids:
+        specifier: ^2.3.0
+        version: 2.3.0
       prisma:
         specifier: ^6.5.0
         version: 6.5.0(typescript@5.8.2)
@@ -508,6 +511,9 @@ packages:
     resolution: {integrity: sha512-5xoDfX+fL7faATnagmWPpbFtwh/R77WmMMqqHGS65C3vvB0YHrgF+B1YmZ3441tMj5n63k0212XNoJwzlhffQw==}
     engines: {node: ^8.16.0 || ^10.6.0 || >=11.0.0}
     os: [darwin]
+
+  hashids@2.3.0:
+    resolution: {integrity: sha512-ljM73TE/avEhNnazxaj0Dw3BbEUuLC5yYCQ9RSkSUcT4ZSU6ZebdKCIBJ+xT/DnSYW36E9k82GH1Q6MydSIosQ==}
 
   help-me@5.0.0:
     resolution: {integrity: sha512-7xgomUX6ADmcYzFik0HzAxh/73YlKR9bmFzf51CZwR+b6YtzU2m0u49hQCqV6SvlqIqsaxovfwdvbnsw3b/zpg==}
@@ -1111,6 +1117,8 @@ snapshots:
 
   fsevents@2.3.3:
     optional: true
+
+  hashids@2.3.0: {}
 
   help-me@5.0.0: {}
 
