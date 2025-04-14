@@ -18,8 +18,8 @@ export default (app: typeof main) => {
 			}
 
 			const token = app.jwt.sign({ username: user.username });
-			res.setCookie('Authorization', token);
-			return res.status(200).send(token);
+			res.setCookie('Authorization', token, { httpOnly: true, secure: true, sameSite: 'none', path: '/' });
+			return res.status(200).send();
 		}
 	);
 
@@ -49,8 +49,8 @@ export default (app: typeof main) => {
 			});
 
 			const token = app.jwt.sign({ username: req.body.username });
-			res.setCookie('Authorization', token);
-			return res.status(201).send(token);
+			res.setCookie('Authorization', token, { httpOnly: true, secure: true, sameSite: 'none', path: '/' });
+			return res.status(201).send();
 		}
 	);
 
