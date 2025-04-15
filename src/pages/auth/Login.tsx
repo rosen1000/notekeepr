@@ -12,11 +12,11 @@ export default function Login() {
 		username: z.string().min(6),
 		password: z
 			.string()
-			.min(passwordLength, `Password must be atleast ${passwordLength} characters`)
-			.refine(
-				(v) => passwordRegex.test(v),
-				'Password must contain atleast\n1 lowercase letter,\n1 uppercase letter and\n1 number'
-			),
+			// .min(passwordLength, `Password must be atleast ${passwordLength} characters`)
+			// .refine(
+			// 	(v) => passwordRegex.test(v),
+			// 	'Password must contain atleast\n1 lowercase letter,\n1 uppercase letter and\n1 number'
+			// ),
 	});
 	type Form = Partial<ReturnType<typeof schema.parse>>;
 

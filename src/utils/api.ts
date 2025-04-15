@@ -1,27 +1,28 @@
+import axios from 'axios';
+
+const app = axios.create({
+	baseURL: '/api/',
+	withCredentials: true,
+});
+
 export default {
 	auth: {
 		login(username: string, password: string) {
-			return fetch('/api/auth/login', {
-				method: 'POST',
-				headers: { 'Content-Type': 'application/json' },
-				body: JSON.stringify({ username, password }),
-			});
+			return app.post('/auth/login', { username, password });
 		},
 		register(username: string, password: string) {
-			return fetch('/api/auth/register', {
-				method: 'POST',
-				headers: { 'Content-Type': 'application/json' },
-				body: JSON.stringify({ username, password }),
-			});
+			return app.post('/auth/register', { username, password });
 		},
 	},
 	note: {
 		new(note: Note) {
-			return fetch('/api/note/new', {
-				method: 'POST',
-				headers: { 'Content-Type': 'application/json' },
-				body: JSON.stringify(note),
-			});
+			return app.post('/note/new', note);
+		},
+		all() {
+			return app.get<NoteResponse[]>('/note/all');
+		},
+		get(id: number) {
+			return app.get(`/note/${id}`);
 		},
 	},
 };
