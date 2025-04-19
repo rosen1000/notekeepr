@@ -1,26 +1,43 @@
 import * as Mui from '@mui/material';
-import { useMemo, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import { set } from '../../utils';
 import RichMarkdown from '../../components/RichMarkdown';
 import api from '../../utils/api';
 import { useNavigate } from 'react-router';
+import { z } from 'zod';
 
 export default function NewNote() {
 	const [title, setTitle] = useState('');
 	const [content, setContent] = useState('');
+	const [path, setPath] = useState<string>('/');
 	const [options, setOptions] = useState({ mono: false });
+	const [paths, setPaths] = useState<string[]>([]);
+	const [edit, setEdit] = useState(false);
 	const navigate = useNavigate();
+	const schema = z.object({
+		title: z.string().nonempty(),
+		content: z.string().nonempty(),
+		path: z.string().nonempty().startsWith('/'),
+		options: z.object({ mono: z.boolean() }),
+	});
 
-	const note = useMemo<Note>(
-		() => ({ id: -1, title, path: '/', tags: [], content, options }),
-		[title, content, options]
-	);
+	useEffect(() => {
+		api.note.paths().then(({ data }) => {
+			setPaths(data);
+			// TODO: handle errors
+		});
+	}, []);
+
+	const note = useMemo<Note>(() => ({ id: -1, title, path, tags: [], content, options }), [title, content, options]);
 	const setNote = (n: React.SetStateAction<Note>) => {
 		if ('content' in n) setContent(n.content);
 		else setContent(n(note).content);
 	};
 
 	function handleSave() {
+		const { success } = schema.safeParse(note)
+		// TODO: handle error
+		if (!success) return;
 		api.note
 			.new(note)
 			.then(() => {
@@ -61,11 +78,39 @@ export default function NewNote() {
 			<Mui.Accordion>
 				<Mui.AccordionSummary>Note options</Mui.AccordionSummary>
 				<Mui.AccordionDetails>
-					<Mui.FormControlLabel
-						control={<Mui.Checkbox />}
-						label='Mono font'
-						onChange={(_, v) => set(setOptions, 'mono', v)}
-					/>
+					<div className='flex flex-col'>
+						<Mui.FormControl>
+							<Mui.InputLabel id='folder-select'>Folder</Mui.InputLabel>
+							<Mui.Select value={path} label='Folder' labelId='folder-select' onChange={(e) => setPath(e.target.value)}>
+								{paths.map((p) => (
+									<Mui.MenuItem key={p} value={p}>
+										{p}
+									</Mui.MenuItem>
+								))}
+								<Mui.MenuItem value={path} hidden={paths.includes(path) || path == '__new__'}>
+									{path}
+								</Mui.MenuItem>
+								<Mui.MenuItem value='__new__' onClick={() => setEdit(true)}>
+									+ New Folder
+								</Mui.MenuItem>
+							</Mui.Select>
+						</Mui.FormControl>
+
+						{edit && (
+							<Mui.TextField
+								label='New Folder Name'
+								value={path === '__new__' ? '' : path}
+								onChange={(e) => setPath(e.target.value)}
+								onBlur={() => setEdit(false)}
+							/>
+						)}
+
+						<Mui.FormControlLabel
+							control={<Mui.Checkbox />}
+							label='Mono font'
+							onChange={(_, v) => set(setOptions, 'mono', v)}
+						/>
+					</div>
 				</Mui.AccordionDetails>
 			</Mui.Accordion>
 			{/* #endregion Note options */}

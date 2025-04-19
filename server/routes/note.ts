@@ -32,10 +32,23 @@ export default (app: typeof main) => {
 		});
 		const paths = (
 			await db.note.groupBy({
+				where: { userId },
 				by: ['path'],
 			})
 		).map((group) => group.path);
 		res.send({ notes, paths });
+	});
+
+	app.get('/paths', async (req, res) => {
+		const token = (await req.jwtVerify()) as JwtPayload;
+		const userId = hasher.decode(token.id)[0] as number;
+		const paths = (
+			await db.note.groupBy({
+				where: { userId },
+				by: ['path'],
+			})
+		).map((group) => group.path);
+		res.send(paths);
 	});
 
 	app.get('/:id(\\d+)', { schema: { params: z.object({ id: z.number({ coerce: true }) }) } }, async (req, res) => {

@@ -20,7 +20,10 @@ export default {
 			return app.post<void>('/note/new', note);
 		},
 		all() {
-			return app.get<{notes: NoteResponse[], paths: string[]}>('/note/all');
+			return app.get<{ notes: NoteResponse[]; paths: string[] }>('/note/all');
+		},
+		paths() {
+			return app.get<string[]>('/note/paths');
 		},
 		get(id: number) {
 			return app.get<Note>(`/note/${id}`);
