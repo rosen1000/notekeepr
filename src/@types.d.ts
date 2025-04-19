@@ -5,6 +5,7 @@ interface NoteOptions {
 interface NoteResponse {
 	id: number;
 	title: string;
+	path: string;
 	tags: any;
 }
 

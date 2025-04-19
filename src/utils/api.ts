@@ -5,6 +5,7 @@ const app = axios.create({
 	withCredentials: true,
 });
 
+// TODO: make all calls respect login status
 export default {
 	auth: {
 		login(username: string, password: string) {
@@ -19,7 +20,7 @@ export default {
 			return app.post('/note/new', note);
 		},
 		all() {
-			return app.get<NoteResponse[]>('/note/all');
+			return app.get<{notes: NoteResponse[], paths: string[]}>('/note/all');
 		},
 		get(id: number) {
 			return app.get(`/note/${id}`);

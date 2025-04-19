@@ -30,7 +30,12 @@ export default (app: typeof main) => {
 			select: { id: true, title: true, path: true, tags: true },
 			where: { userId },
 		});
-		res.send(notes);
+		const paths = (
+			await db.note.groupBy({
+				by: ['path'],
+			})
+		).map((group) => group.path);
+		res.send({ notes, paths });
 	});
 
 	app.get('/:id(\\d+)', { schema: { params: z.object({ id: z.number({ coerce: true }) }) } }, async (req, res) => {

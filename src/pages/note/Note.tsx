@@ -10,6 +10,7 @@ export default function Note() {
 	const navigate = useNavigate();
 	// TODO: Fetch note from somewhere
 	const [note, setNote] = useState<Note>(null as unknown as Note);
+	const [paths, setPaths] = useState<string[]>([]);
 	const [notes, setNotes] = useState<NoteResponse[]>([]);
 	// WHY DO I HAVE TO DO THIS
 	let didMount = useRef(false);
@@ -25,8 +26,9 @@ export default function Note() {
 	useEffect(() => {
 		api.note
 			.all()
-			.then(({ data: notes }) => {
-				setNotes(notes);
+			.then(({ data }) => {
+				setNotes(data.notes);
+				setPaths(data.paths);
 			})
 			.catch((e: AxiosError) => {
 				// TODO: use snackbar to display errors
@@ -53,7 +55,7 @@ export default function Note() {
 						Compose
 					</Button>
 				</div>
-				<NoteTree notes={notes} onSelect={handleSelect} />
+				<NoteTree notes={notes} paths={paths} onSelect={handleSelect} />
 			</div>
 			{/* //#endregion */}
 
