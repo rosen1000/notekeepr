@@ -26,6 +26,7 @@ createRoot(document.getElementById('root')!).render(
 				<Route path='note'>
 					<Route index element={<Note />} />
 					<Route path='new' element={<NewNote />} />
+					<Route path=':id' element={<Note />} />
 				</Route>
 			</Routes>
 		</BrowserRouter>

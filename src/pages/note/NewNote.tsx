@@ -2,16 +2,33 @@ import * as Mui from '@mui/material';
 import { useMemo, useState } from 'react';
 import { set } from '../../utils';
 import RichMarkdown from '../../components/RichMarkdown';
+import api from '../../utils/api';
+import { useNavigate } from 'react-router';
 
 export default function NewNote() {
 	const [title, setTitle] = useState('');
 	const [content, setContent] = useState('');
 	const [options, setOptions] = useState({ mono: false });
-	const note = useMemo<Note>(() => ({ id: -1, title, content, options }), [title, content, options]);
+	const navigate = useNavigate();
+
+	const note = useMemo<Note>(
+		() => ({ id: -1, title, path: '/', tags: [], content, options }),
+		[title, content, options]
+	);
 	const setNote = (n: React.SetStateAction<Note>) => {
 		if ('content' in n) setContent(n.content);
 		else setContent(n(note).content);
 	};
+
+	function handleSave() {
+		api.note
+			.new(note)
+			.then(() => {
+				navigate('/note/' + note.id);
+			})
+			// TODO: handle error
+			.catch((e) => console.log(e));
+	}
 
 	return (
 		<div className='flex flex-col items-center justify-center my-16 gap-8 lg:mx-[20vw] sm:mx-[10vw] mx-4'>
@@ -53,6 +70,9 @@ export default function NewNote() {
 			</Mui.Accordion>
 			{/* #endregion Note options */}
 
+			<Mui.Button variant='contained' color='primary' onClick={handleSave}>
+				Save
+			</Mui.Button>
 			<RichMarkdown note={[note, setNote]} />
 		</div>
 	);

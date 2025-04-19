@@ -1,27 +1,25 @@
 import RichMarkdown from '../../components/RichMarkdown';
 import { Button } from '@mui/material';
-import { useEffect, useRef, useState } from 'react';
-import { useNavigate } from 'react-router';
+import { useEffect, useState } from 'react';
+import { useNavigate, useParams } from 'react-router';
 import NoteTree from '../../components/NoteTree';
 import api from '../../utils/api';
 import { AxiosError } from 'axios';
 
 export default function Note() {
 	const navigate = useNavigate();
-	// TODO: Fetch note from somewhere
+	const params = useParams<{ id: string }>();
 	const [note, setNote] = useState<Note>(null as unknown as Note);
-	const [paths, setPaths] = useState<string[]>([]);
 	const [notes, setNotes] = useState<NoteResponse[]>([]);
-	// WHY DO I HAVE TO DO THIS
-	let didMount = useRef(false);
+	const [paths, setPaths] = useState<string[]>([]);
+
 	useEffect(() => {
-		if (!didMount.current) {
-			didMount.current = true;
-			return;
+		if (params.id) {
+			api.note.get(+params.id).then(({ data }) => {
+				setNote(data);
+			});
 		}
-		console.log(note);
-		// TODO: Save note in db
-	}, [note]);
+	}, [params]);
 
 	useEffect(() => {
 		api.note
@@ -31,7 +29,6 @@ export default function Note() {
 				setPaths(data.paths);
 			})
 			.catch((e: AxiosError) => {
-				// TODO: use snackbar to display errors
 				if (e.status == 401) {
 					alert('You are not logged in');
 				}
@@ -40,9 +37,10 @@ export default function Note() {
 	}, []);
 
 	function handleSelect(index: number) {
-		api.note.get(notes[index].id).then(({ data }) => {
-			setNote(data);
-		});
+		navigate(`/note/${index}`);
+		// api.note.get(notes[index].id).then(({ data }) => {
+		//   setNote(data);
+		// });
 	}
 
 	return (
@@ -55,7 +53,9 @@ export default function Note() {
 						Compose
 					</Button>
 				</div>
-				<NoteTree notes={notes} paths={paths} onSelect={handleSelect} />
+				{notes.length > 0 && (
+					<NoteTree notes={notes} paths={paths} select={params.id ? +params.id : -1} onSelect={handleSelect} />
+				)}
 			</div>
 			{/* //#endregion */}
 

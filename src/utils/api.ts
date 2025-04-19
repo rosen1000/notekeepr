@@ -17,13 +17,13 @@ export default {
 	},
 	note: {
 		new(note: Note) {
-			return app.post('/note/new', note);
+			return app.post<void>('/note/new', note);
 		},
 		all() {
 			return app.get<{notes: NoteResponse[], paths: string[]}>('/note/all');
 		},
 		get(id: number) {
-			return app.get(`/note/${id}`);
+			return app.get<Note>(`/note/${id}`);
 		},
 	},
 };
