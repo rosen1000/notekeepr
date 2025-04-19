@@ -1,8 +1,9 @@
 import * as Mui from '@mui/material';
-import { useEffect, useMemo, useState } from 'react';
-import { set } from '../../utils';
-import RichMarkdown from '../../components/RichMarkdown';
 import api from '../../utils/api';
+import RichMarkdown from '../../components/RichMarkdown';
+import { set } from '../../utils';
+import { toast } from 'react-toastify';
+import { useEffect, useMemo, useState } from 'react';
 import { useNavigate } from 'react-router';
 import { z } from 'zod';
 
@@ -22,10 +23,14 @@ export default function NewNote() {
 	});
 
 	useEffect(() => {
-		api.note.paths().then((paths) => {
-			setPaths(paths);
-			// TODO: handle errors
-		});
+		api.note
+			.paths()
+			.then((paths) => {
+				setPaths(paths);
+			})
+			.catch((e) => {
+				toast.error(`Error: ${e.message}`);
+			});
 	}, []);
 
 	const note = useMemo<Note>(() => ({ id: -1, title, path, tags: [], content, options }), [title, content, options]);
@@ -35,7 +40,7 @@ export default function NewNote() {
 	};
 
 	function handleSave() {
-		const { success } = schema.safeParse(note)
+		const { success } = schema.safeParse(note);
 		// TODO: handle error
 		if (!success) return;
 		api.note

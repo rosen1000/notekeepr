@@ -7,6 +7,7 @@ import { BrowserRouter, Route, Routes } from 'react-router';
 import { createRoot } from 'react-dom/client';
 import { createTheme, CssBaseline, ThemeProvider } from '@mui/material';
 import { green, pink } from '@mui/material/colors';
+import { ToastContainer } from 'react-toastify';
 import './index.css';
 
 const theme = createTheme({
@@ -30,5 +31,6 @@ createRoot(document.getElementById('root')!).render(
 				</Route>
 			</Routes>
 		</BrowserRouter>
+		<ToastContainer position='bottom-center' autoClose={3000} theme='dark' />
 	</ThemeProvider>
 );

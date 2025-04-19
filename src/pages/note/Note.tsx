@@ -1,10 +1,11 @@
+import api from '../../utils/api';
+import NoteTree from '../../components/NoteTree';
 import RichMarkdown from '../../components/RichMarkdown';
+import { AxiosError } from 'axios';
 import { Button } from '@mui/material';
+import { toast } from 'react-toastify';
 import { useEffect, useState } from 'react';
 import { useNavigate, useParams } from 'react-router';
-import NoteTree from '../../components/NoteTree';
-import api from '../../utils/api';
-import { AxiosError } from 'axios';
 
 export default function Note() {
 	const navigate = useNavigate();
@@ -15,9 +16,14 @@ export default function Note() {
 
 	useEffect(() => {
 		if (params.id) {
-			api.note.get(+params.id).then((notes) => {
-				setNote(notes);
-			});
+			api.note
+				.get(+params.id)
+				.then((notes) => {
+					setNote(notes);
+				})
+				.catch((e) => {
+					toast.error(`Error: ${e.message}`);
+				});
 		}
 	}, [params]);
 
