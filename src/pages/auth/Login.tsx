@@ -2,7 +2,6 @@ import * as Mui from '@mui/material';
 import api from '../../utils/api';
 import z from 'zod';
 import { ChangeEvent, FormEvent, useEffect, useState } from 'react';
-import { passwordLength, passwordRegex } from '../../utils';
 import { useNavigate } from 'react-router';
 import { Visibility, VisibilityOff } from '@mui/icons-material';
 
@@ -10,13 +9,7 @@ export default function Login() {
 	const navigate = useNavigate();
 	const schema = z.object({
 		username: z.string().min(6),
-		password: z
-			.string()
-			// .min(passwordLength, `Password must be atleast ${passwordLength} characters`)
-			// .refine(
-			// 	(v) => passwordRegex.test(v),
-			// 	'Password must contain atleast\n1 lowercase letter,\n1 uppercase letter and\n1 number'
-			// ),
+		password: z.string(),
 	});
 	type Form = Partial<ReturnType<typeof schema.parse>>;
 
@@ -40,19 +33,19 @@ export default function Login() {
 		setFormData({ ...formData, [e.target.name]: e.target.value });
 	};
 
-	const submit = async (e: FormEvent<HTMLFormElement>) => {
+	const submit = (e: FormEvent<HTMLFormElement>) => {
 		e.preventDefault();
 		const { success } = schema.safeParse(formData);
 		if (!success) return;
 
-		const res = await api.auth.login(formData.username!, formData.password!);
-		if (res.status >= 200 && res.status < 300) {
-			navigate('/note');
-		} else {
-			setErrors({
-				username: 'Invalid username or password',
+		api.auth
+			.login(formData.username!, formData.password!)
+			.then(() => {
+				navigate('/note');
+			})
+			.catch(() => {
+				setErrors({ username: 'Invalid username or password' });
 			});
-		}
 	};
 
 	return (

@@ -43,19 +43,19 @@ export default function Register() {
 		setFormData({ ...formData, [e.target.name]: e.target.value });
 	};
 
-	const submit = async (e: FormEvent<HTMLFormElement>) => {
+	const submit = (e: FormEvent<HTMLFormElement>) => {
 		e.preventDefault();
 		const { success } = schema.safeParse(formData);
 		if (!success) return;
 
-		const res = await api.auth.login(formData.username!, formData.password!);
-		if (res.status >= 200 && res.status < 300) {
-			navigate('/note');
-		} else {
-			setErrors({
-				username: 'Invalid username or password',
+		api.auth
+			.login(formData.username!, formData.password!)
+			.then(() => {
+				navigate('/note');
+			})
+			.catch(() => {
+				setErrors({ username: 'Invalid username or password' });
 			});
-		}
 	};
 
 	return (

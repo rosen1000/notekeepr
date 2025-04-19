@@ -15,8 +15,8 @@ export default function Note() {
 
 	useEffect(() => {
 		if (params.id) {
-			api.note.get(+params.id).then(({ data }) => {
-				setNote(data);
+			api.note.get(+params.id).then((notes) => {
+				setNote(notes);
 			});
 		}
 	}, [params]);
@@ -24,9 +24,9 @@ export default function Note() {
 	useEffect(() => {
 		api.note
 			.all()
-			.then(({ data }) => {
-				setNotes(data.notes);
-				setPaths(data.paths);
+			.then(({ notes, paths }) => {
+				setNotes(notes);
+				setPaths(paths);
 			})
 			.catch((e: AxiosError) => {
 				if (e.status == 401) {

@@ -22,8 +22,8 @@ export default function NewNote() {
 	});
 
 	useEffect(() => {
-		api.note.paths().then(({ data }) => {
-			setPaths(data);
+		api.note.paths().then((paths) => {
+			setPaths(paths);
 			// TODO: handle errors
 		});
 	}, []);

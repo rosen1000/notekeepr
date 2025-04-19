@@ -5,28 +5,69 @@ const app = axios.create({
 	withCredentials: true,
 });
 
-// TODO: make all calls respect login status
+function isLogged() {
+	return localStorage.getItem('logged') == 'true';
+}
+
+function read<T>(key: string): T | null {
+	return JSON.parse(localStorage.getItem(key) || 'null');
+}
+
+function write(key: string, value: any) {
+	localStorage.setItem(key, JSON.stringify(value));
+}
+
 export default {
 	auth: {
-		login(username: string, password: string) {
-			return app.post('/auth/login', { username, password });
+		async login(username: string, password: string) {
+			await app.post('/auth/login', { username, password });
+			write('logged', 'true');
 		},
-		register(username: string, password: string) {
-			return app.post('/auth/register', { username, password });
+		async register(username: string, password: string) {
+			await app.post('/auth/register', { username, password });
+			write('logged', 'true');
 		},
 	},
 	note: {
-		new(note: Note) {
-			return app.post<void>('/note/new', note);
+		async new(note: Note) {
+			if (isLogged()) await app.post('/note/new', note);
+			else {
+				let notes: Note[] = read('notes') ?? [];
+				notes.push(note);
+				write('notes', notes);
+			}
 		},
-		all() {
-			return app.get<{ notes: NoteResponse[]; paths: string[] }>('/note/all');
+		async all() {
+			if (isLogged()) return (await app.get<{ notes: NoteResponse[]; paths: string[] }>('/note/all')).data;
+			else {
+				const notes: NoteResponse[] = read('notes') ?? [];
+				const paths: string[] = read('paths') ?? [];
+				return { notes, paths };
+			}
 		},
-		paths() {
-			return app.get<string[]>('/note/paths');
+		async paths() {
+			let data: string[];
+			if (isLogged()) data = (await app.get<string[]>('/note/paths')).data;
+			else data = read('paths') ?? [];
+			return data;
 		},
-		get(id: number) {
-			return app.get<Note>(`/note/${id}`);
+		async get(id: number) {
+			if (isLogged()) return (await app.get<Note>(`/note/${id}`)).data;
+			else {
+				const notes: Note[] = read('notes') ?? [];
+				const found = notes.find((n) => n.id == id);
+				if (found) return found;
+				const error = {
+					isAxiosError: true,
+					response: {
+						status: 404,
+						data: {
+							message: 'Note not found',
+						},
+					},
+				};
+				throw error;
+			}
 		},
 	},
 };
