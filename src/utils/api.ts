@@ -13,7 +13,7 @@ function read<T>(key: string): T | null {
 	return JSON.parse(localStorage.getItem(key) || 'null');
 }
 
-function write(key: string, value: any) {
+function write(key: string, value: unknown) {
 	localStorage.setItem(key, JSON.stringify(value));
 }
 
@@ -32,7 +32,7 @@ export default {
 		async new(note: Note) {
 			if (isLogged()) await app.post('/note/new', note);
 			else {
-				let notes: Note[] = read('notes') ?? [];
+				const notes: Note[] = read('notes') ?? [];
 				notes.push(note);
 				write('notes', notes);
 			}

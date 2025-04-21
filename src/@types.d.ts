@@ -2,11 +2,17 @@ interface NoteOptions {
 	mono: boolean;
 }
 
+interface Tag {
+	id: number;
+	name: string;
+	color: string;
+}
+
 interface NoteResponse {
 	id: number;
 	title: string;
 	path: string;
-	tags: any;
+	tags: Tag[];
 }
 
 interface Note {
@@ -14,5 +20,5 @@ interface Note {
 	title: string;
 	content: string;
 	options?: Partial<NoteOptions>;
-	tags: any;
+	tags: Tag[];
 }

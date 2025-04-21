@@ -6,7 +6,7 @@ import { serializerCompiler, validatorCompiler } from 'fastify-zod-openapi';
 import type { FastifyZodOpenApiTypeProvider } from 'fastify-zod-openapi';
 
 export const app = (() => {
-	let _app = fastify({ logger: { transport: { target: 'fastify-pino-pretty' } } });
+	const _app = fastify({ logger: { transport: { target: 'fastify-pino-pretty' } } });
 	_app.setSerializerCompiler(serializerCompiler);
 	_app.setValidatorCompiler(validatorCompiler);
 	return _app.withTypeProvider<FastifyZodOpenApiTypeProvider>();

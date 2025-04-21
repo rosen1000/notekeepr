@@ -54,10 +54,10 @@ export default (app: typeof main) => {
 		}
 	);
 
-	app.get('/me', async (req, res) => {
+	app.get('/me', async (req) => {
 		try {
-			let jwt = (await req.jwtVerify()) as JwtPayload;
-			let user = db.user.findFirst({
+			const jwt = (await req.jwtVerify()) as JwtPayload;
+			const user = db.user.findFirst({
 				where: {
 					username: jwt.username,
 				},

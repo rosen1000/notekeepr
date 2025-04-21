@@ -9,7 +9,7 @@ interface Props {
 }
 
 export default function RichMarkdown({ note: [note, setNote] }: Props) {
-	const [_, rerender] = useState(0);
+	const [, rerender] = useState(0);
 	const markdown = useMemo(() => `# ${note.title}\n${note.content}`, [note.title, note.content]);
 	let taskId = 0;
 
