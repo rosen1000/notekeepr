@@ -2,26 +2,31 @@ import db from '../database';
 import z from 'zod';
 import { app as main } from '..';
 import hasher from '../hasher';
+import type { JwtPayload } from '../@types';
 
 export default (app: typeof main) => {
-	app.post('/new', { schema: { body: z.object({ title: z.string(), content: z.string() }) } }, async (req, res) => {
-		const token = (await req.jwtVerify()) as JwtPayload;
-		const userId = hasher.decode(token.id)[0] as number;
-		const { title, content } = req.body;
-		try {
-			await db.note.create({
-				data: {
-					title,
-					content,
-					userId,
-					path: '/',
-				},
-			});
-		} catch (e) {
-			console.log(e);
-			return res.status(500).send('Something went wrong.');
+	app.post(
+		'/new',
+		{ schema: { body: z.object({ title: z.string(), content: z.string(), path: z.string().default('/') }) } },
+		async (req, res) => {
+			const token = (await req.jwtVerify()) as JwtPayload;
+			const userId = hasher.decode(token.id)[0] as number;
+			const { title, content, path } = req.body;
+			try {
+				await db.note.create({
+					data: {
+						title,
+						content,
+						userId,
+						path,
+					},
+				});
+			} catch (e) {
+				console.log(e);
+				return res.status(500).send('Something went wrong.');
+			}
 		}
-	});
+	);
 
 	app.get('/all', async (req, res) => {
 		const token = (await req.jwtVerify()) as JwtPayload;

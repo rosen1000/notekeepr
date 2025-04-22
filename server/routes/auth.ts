@@ -2,6 +2,7 @@ import argon2 from '@node-rs/argon2';
 import db from '../database';
 import { app as main } from '..';
 import { z } from 'zod';
+import { JwtPayload } from '../@types';
 
 // TODO: use hashid for user ids
 export default (app: typeof main) => {
