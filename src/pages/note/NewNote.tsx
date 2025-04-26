@@ -41,15 +41,15 @@ export default function NewNote() {
 
 	function handleSave() {
 		const { success } = schema.safeParse(note);
-		// TODO: handle error
-		if (!success) return;
+		if (!success) return toast.error('Error: Note is missing a component');
 		api.note
 			.new(note)
 			.then(() => {
 				navigate('/note/' + note.id);
 			})
-			// TODO: handle error
-			.catch((e) => console.log(e));
+			.catch((e) => {
+				toast.error(`Error: ${e.message}`);
+			});
 	}
 
 	return (
