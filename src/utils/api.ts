@@ -30,7 +30,7 @@ export default {
 		async logout() {
 			await app.post('/auth/logout');
 			write('logged', 'false');
-		}
+		},
 	},
 	note: {
 		async new(note: Note) {
@@ -72,6 +72,17 @@ export default {
 				};
 				throw error;
 			}
+		},
+	},
+	share: {
+		async create(id: number) {
+			return (await app.post<string>('/note/share', { id })).data;
+		},
+		async get(link: string) {
+			return (await app.get<Note>(`/share/${link}`)).data;
+		},
+		async delete(link: string) {
+			await app.delete(`/share/${link}`);
 		},
 	},
 };

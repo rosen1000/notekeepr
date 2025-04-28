@@ -8,20 +8,22 @@ generator Client {
 }
 
 model User {
-    id       Int    @id @default(autoincrement())
-    username String @unique
+    id       Int     @id @default(autoincrement())
+    username String  @unique
     password String
     Note     Note[]
+    Share    Share[]
 }
 
 model Note {
-    id      Int    @id @default(autoincrement())
+    id      Int     @id @default(autoincrement())
     title   String
     content String
     path    String
     tags    Tag[]
     userId  Int
-    user    User   @relation(fields: [userId], references: [id])
+    user    User    @relation(fields: [userId], references: [id])
+    Share   Share[]
 }
 
 model Tag {
@@ -30,6 +32,16 @@ model Tag {
     color  String
     noteId Int
     note   Note   @relation(fields: [noteId], references: [id])
+}
+
+model Share {
+    id    Int    @id @default(autoincrement())
+    owner User   @relation(fields: [userId], references: [id])
+    note  Note   @relation(fields: [noteId], references: [id])
+    link  String @unique
+
+    userId Int
+    noteId Int
 }
 
 // 5.13.1
