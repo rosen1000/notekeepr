@@ -27,6 +27,10 @@ export default {
 			await app.post('/auth/register', { username, password });
 			write('logged', 'true');
 		},
+		async logout() {
+			await app.post('/auth/logout');
+			write('logged', 'false');
+		}
 	},
 	note: {
 		async new(note: Note) {

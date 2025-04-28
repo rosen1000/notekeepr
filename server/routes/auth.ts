@@ -44,6 +44,10 @@ export default (app: typeof main) => {
 		}
 	);
 
+	app.post('/logout', async (_req, res) => {
+		res.clearCookie('Authorization');
+	});
+
 	app.get('/me', async (req) => {
 		try {
 			const jwt = (await req.jwtVerify()) as JwtPayload;

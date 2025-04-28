@@ -58,28 +58,30 @@ export default function Note() {
 		// });
 	}
 
+	function handleLogout() {
+		api.auth.logout().finally(() => navigate('/'));
+	}
+
 	return (
 		<div className='flex h-screen'>
 			<div className='absolute top-4 right-4'>
 				<Button onClick={handleClick}>
-					<Icon icon='mdi-account' fontSize={'2rem'}></Icon>
+					<Icon icon='mdi-account' fontSize={'2rem'} />
 				</Button>
 				<Menu open={open} anchorEl={anchorEl} onClose={handleClose} anchorPosition={{ left: 2, top: 0 }}>
 					{isLogged() ? (
-						<>
+						[
 							<MenuItem>
 								<Icon icon='mdi-account' className='mr-2' /> Account
-							</MenuItem>
-							<MenuItem>
+							</MenuItem>,
+							<MenuItem onClick={handleLogout}>
 								<Icon icon='mdi-logout' className='mr-2' /> Logout
-							</MenuItem>
-						</>
+							</MenuItem>,
+						]
 					) : (
-						<>
-							<MenuItem>
-								<Icon icon='mdi-login' className='mr-2' /> Login
-							</MenuItem>
-						</>
+						<MenuItem onClick={() => navigate('/auth/login')}>
+							<Icon icon='mdi-login' className='mr-2' /> Login
+						</MenuItem>
 					)}
 				</Menu>
 			</div>
