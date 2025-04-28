@@ -5,15 +5,15 @@ const app = axios.create({
 	withCredentials: true,
 });
 
-function isLogged() {
+export function isLogged() {
 	return localStorage.getItem('logged') == 'true';
 }
 
-function read<T>(key: string): T | null {
+export function read<T>(key: string): T | null {
 	return JSON.parse(localStorage.getItem(key) || 'null');
 }
 
-function write(key: string, value: unknown) {
+export function write(key: string, value: unknown) {
 	localStorage.setItem(key, JSON.stringify(value));
 }
 
