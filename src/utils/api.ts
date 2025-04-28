@@ -6,7 +6,7 @@ const app = axios.create({
 });
 
 export function isLogged() {
-	return localStorage.getItem('logged') == 'true';
+	return localStorage.getItem('logged') == '"true"';
 }
 
 export function read<T>(key: string): T | null {
