@@ -104,7 +104,7 @@ export default function Note() {
 			<div className='w-full flex flex-col items-center justify-center'>
 				{note ? (
 					<div className='p-8 bg-gray-800 rounded-md shadow-lg'>
-						<RichMarkdown note={[note, setNote]} />
+						<RichMarkdown editable note={[note, setNote]} />
 					</div>
 				) : (
 					<div className='p-8 bg-gray-800 rounded-md shadow-lg'>No note selected.</div>

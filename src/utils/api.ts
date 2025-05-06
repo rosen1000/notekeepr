@@ -76,7 +76,7 @@ export default {
 	},
 	share: {
 		async create(id: number) {
-			return (await app.post<string>('/note/share', { id })).data;
+			return (await app.post<string>('/share', { id })).data;
 		},
 		async get(link: string) {
 			return (await app.get<Note>(`/share/${link}`)).data;

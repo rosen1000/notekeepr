@@ -18,5 +18,6 @@ app.register(fastifyJwt, { secret: process.env.JWT_SECRET!, cookie: { cookieName
 
 app.register(import('./routes/auth'), { prefix: 'api/auth' });
 app.register(import('./routes/note'), { prefix: 'api/note' });
+app.register(import('./routes/share'), { prefix: 'api/share' });
 
 app.listen({ port: 3000 });

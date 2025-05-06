@@ -20,5 +20,6 @@ interface Note {
 	title: string;
 	content: string;
 	options?: Partial<NoteOptions>;
+	Share: { link: string }[];
 	tags: Tag[];
 }

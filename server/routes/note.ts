@@ -58,41 +58,11 @@ export default (app: typeof main) => {
 
 	app.get('/:id(\\d+)', { schema: { params: z.object({ id: z.number({ coerce: true }) }) } }, async (req, res) => {
 		// TODO: check if user is allowed to access this note
-		const note = await db.note.findUnique({ where: { id: req.params.id } });
-		if (!note) return res.status(404).send('Note not found.');
-		res.send(note);
-	});
-
-	app.post('/share', { schema: { body: z.object({ id: z.number() }) } }, async (req, res) => {
-		const token = (await req.jwtVerify()) as JwtPayload;
-		const userId = hasher.decode(token.id)[0] as number;
-		const note = await db.note.findUnique({ where: { id: req.body.id } });
-		if (!note) return res.status(404).send('Note not found.');
-		if (userId != note.userId) {
-			return res.status(403).send('You are not allowed to share this note.');
-		}
-		const link = hasher.encode([userId, note.id]);
-		await db.share.create({
-			data: { userId, noteId: req.body.id, link },
+		const note = await db.note.findUnique({
+			where: { id: req.params.id },
+			include: { Share: { select: { link: true } } },
 		});
-		res.send(link);
-	});
-
-	app.get('/share/:link', { schema: { params: z.object({ link: z.string() }) } }, async (req, res) => {
-		const share = await db.share.findFirst({ where: { link: req.params.link } });
-		if (!share) return res.status(404).send('Share not found.');
-		const note = await db.note.findUnique({ where: { id: share.noteId } });
 		if (!note) return res.status(404).send('Note not found.');
 		res.send(note);
-	});
-
-	app.delete('/share/:link', { schema: { params: z.object({ link: z.string() }) } }, async (req, res) => {
-		const token = (await req.jwtVerify()) as JwtPayload;
-		const userId = hasher.decode(token.id)[0] as number;
-		const [uId, noteId] = hasher.decode(req.params.link) as number[];
-		if (uId != userId) return res.status(403).send('You are not allowed to delete this share.');
-		const { count } = await db.share.deleteMany({ where: { userId, noteId, link: req.params.link } });
-		if (count == 0) return res.status(404).send('Share not found.');
-		res.send('Share deleted.');
 	});
 };
