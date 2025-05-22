@@ -57,9 +57,10 @@ export default (app: typeof main) => {
 	});
 
 	app.get('/:id(\\d+)', { schema: { params: z.object({ id: z.number({ coerce: true }) }) } }, async (req, res) => {
-		// TODO: check if user is allowed to access this note
+		const token = (await req.jwtVerify()) as JwtPayload;
+		const userId = hasher.decode(token.id)[0] as number;
 		const note = await db.note.findUnique({
-			where: { id: req.params.id },
+			where: { id: req.params.id, userId: userId },
 			include: { Share: { select: { link: true } } },
 		});
 		if (!note) return res.status(404).send('Note not found.');
