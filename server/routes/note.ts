@@ -66,7 +66,25 @@ export default (app: typeof main) => {
 		res.send(note);
 	});
 
-	app.delete('/:id(\\d+)', { schema: { params: z.object({ id: z.number({ coerce: true }) }) } }, async (req, _res) => {
+	app.patch(
+		'/:id(\\d+)',
+		{
+			schema: {
+				body: z.object({
+					title: z.string().nonempty(),
+					content: z.string().nonempty(),
+					path: z.string().nonempty().startsWith('/'),
+				}),
+				params: z.object({ id: z.number({ coerce: true }) }),
+			},
+		},
+		async (req) => {
+			await req.jwtVerify();
+			await db.note.update({ where: { id: req.params.id }, data: req.body });
+		}
+	);
+
+	app.delete('/:id(\\d+)', { schema: { params: z.object({ id: z.number({ coerce: true }) }) } }, async (req) => {
 		const token = (await req.jwtVerify()) as JwtPayload;
 		const userId = hasher.decode(token.id)[0] as number;
 		const result = await db.note.delete({ where: { id: req.params.id, userId } });

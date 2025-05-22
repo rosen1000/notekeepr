@@ -55,6 +55,16 @@ export default {
 			else data = read('paths') ?? [];
 			return data;
 		},
+		async update(id: number, data: Partial<Note>) {
+			if (isLogged()) return app.patch(`/note/${id}`, data);
+			else {
+				const notes: Note[] = read('notes') ?? [];
+				const idx = notes.findIndex((v) => v.id == id);
+				if (idx == -1) return;
+				notes[idx] = { ...notes[idx], ...data };
+				write('notes', notes);
+			}
+		},
 		async get(id: number) {
 			if (isLogged()) return (await app.get<Note>(`/note/${id}`)).data;
 			else {
