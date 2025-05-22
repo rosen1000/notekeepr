@@ -3,10 +3,10 @@ import NoteTree from '../../components/NoteTree';
 import RichMarkdown from '../../components/RichMarkdown';
 import { AxiosError } from 'axios';
 import { Button, Menu, MenuItem } from '@mui/material';
+import { Icon } from '@iconify/react';
 import { toast } from 'react-toastify';
 import { useEffect, useState } from 'react';
 import { useNavigate, useParams } from 'react-router';
-import { Icon } from '@iconify/react';
 
 export default function Note() {
 	const navigate = useNavigate();
@@ -51,6 +51,10 @@ export default function Note() {
 			});
 	}, []);
 
+	useEffect(() => {
+		if (note) api.note.update(note.id, note);
+	}, [note]);
+
 	function handleSelect(index: number) {
 		navigate(`/note/${index}`);
 		// api.note.get(notes[index].id).then(({ data }) => {
@@ -88,7 +92,6 @@ export default function Note() {
 
 			{/* //#region Sidebar/Navigation */}
 			<div className='flex flex-col items-center min-w-3xs border-r border-gray-600'>
-				{/* TODO: Get notes and build tree-like thing */}
 				<div className='p-4 w-full'>
 					<Button size='large' variant='contained' onClick={() => navigate('/note/new')} className='w-full'>
 						Compose

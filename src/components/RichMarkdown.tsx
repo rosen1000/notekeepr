@@ -19,8 +19,8 @@ export default function RichMarkdown({ note: [note, setNote], editable = false }
 	const markdown = useMemo(() => `# ${note.title}\n${note.content}`, [note.title, note.content]);
 	const [openDialog, toggleDialog] = useReducer((state) => !state, false);
 	const [modalMode, setModalMode] = useState<'share' | 'delete'>('share');
-	const [shared, setShared] = useState(note.Share.length > 0);
-	const [shareLink, setSharedLink] = useState(note.Share.length > 0 ? note.Share[0].link : '');
+	const [shared, setShared] = useState((note.Share?.length ?? 0) > 0);
+	const [shareLink, setSharedLink] = useState(note.Share && note.Share.length > 0 ? note.Share[0].link : '');
 	const fullShareLink = useMemo(() => `${window.location.origin}/share/${shareLink}`, [shareLink]);
 	let taskId = 0;
 
@@ -118,7 +118,7 @@ export default function RichMarkdown({ note: [note, setNote], editable = false }
 				remarkPlugins={[remarkGfm]}
 				components={{
 					h1: ({ children }) => (
-						<h1>
+						<h1 key='header'>
 							{children}
 							<div className='inline pl-4'>
 								{editable && [

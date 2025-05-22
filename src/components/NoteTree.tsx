@@ -48,9 +48,9 @@ export default function NoteTree({ notes, paths, onSelect, select = -1 }: Props)
 			)}
 			{paths.map((path) => (
 				<>
-					{path !== '/' && (
-						<ListItemButton onClick={toggleActive(path)} sx={{ ml: '-2rem' }}>
-							<ListItem key={`group-${path}`} className='pl-4'>
+					{path != '/' && [
+						<ListItemButton key={`group-${path}`} onClick={toggleActive(path)} sx={{ ml: '-2rem' }}>
+							<ListItem className='pl-4'>
 								<Icon
 									icon='mdi:chevron-up'
 									className={`mr-2 transition duration-200 ${active.includes(path) && 'rotate-180'}`}
@@ -58,18 +58,18 @@ export default function NoteTree({ notes, paths, onSelect, select = -1 }: Props)
 								/>{' '}
 								{path}
 							</ListItem>
-						</ListItemButton>
-					)}
-					<Collapse in={!!active.find((p) => p == path)}>
-						{notes.map(
-							(note) =>
-								note.path == path && (
-									<ListItemButton selected={note.id === selected} onClick={handleClick(note.id)} sx={{ pl: '2rem' }}>
-										<ListItem key={`innernote-${note.id}`}>{note.title}</ListItem>
-									</ListItemButton>
-								)
-						)}
-					</Collapse>
+						</ListItemButton>,
+						<Collapse in={!!active.find((p) => p == path)}>
+							{notes.map(
+								(note) =>
+									note.path == path && (
+										<ListItemButton selected={note.id === selected} onClick={handleClick(note.id)} sx={{ pl: '2rem' }}>
+											<ListItem key={`innernote-${note.id}`}>{note.title}</ListItem>
+										</ListItemButton>
+									)
+							)}
+						</Collapse>,
+					]}
 				</>
 			))}
 		</List>
