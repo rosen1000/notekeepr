@@ -20,7 +20,7 @@ export default function RichMarkdown({ note: [note, setNote], editable = false }
 	const [openDialog, toggleDialog] = useReducer((state) => !state, false);
 	const [modalMode, setModalMode] = useState<'share' | 'delete'>('share');
 	const [shared, setShared] = useState(note.Share.length > 0);
-	const [shareLink, setSharedLink] = useState(note.Share[0].link);
+	const [shareLink, setSharedLink] = useState(note.Share.length > 0 ? note.Share[0].link : '');
 	const fullShareLink = useMemo(() => `${window.location.origin}/share/${shareLink}`, [shareLink]);
 	let taskId = 0;
 
@@ -68,6 +68,19 @@ export default function RichMarkdown({ note: [note, setNote], editable = false }
 		}
 	}
 
+	function handleDelete() {
+		api.note
+			.delete(note.id)
+			.then(() => {
+				toggleDialog();
+				toast('Note deleted');
+			})
+			.catch((e) => {
+				console.error(e);
+				toast.error(`Error: ${e.message}`);
+			});
+	}
+
 	return (
 		<div className={'prose prose-invert text-white! ' + (note.options?.mono ? 'font-mono' : 'font-inherit')}>
 			<Dialog open={openDialog} onClose={toggleDialog}>
@@ -90,6 +103,14 @@ export default function RichMarkdown({ note: [note, setNote], editable = false }
 				) : (
 					<>
 						<DialogTitle>Delete note?</DialogTitle>
+						<DialogContent className='flex gap-4'>
+							<Button variant='outlined' onClick={toggleDialog}>
+								No
+							</Button>
+							<Button variant='contained' color='error' onClick={handleDelete}>
+								Yes
+							</Button>
+						</DialogContent>
 					</>
 				)}
 			</Dialog>

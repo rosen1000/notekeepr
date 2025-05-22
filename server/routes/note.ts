@@ -65,4 +65,11 @@ export default (app: typeof main) => {
 		if (!note) return res.status(404).send('Note not found.');
 		res.send(note);
 	});
+
+	app.delete('/:id(\\d+)', { schema: { params: z.object({ id: z.number({ coerce: true }) }) } }, async (req, _res) => {
+		const token = (await req.jwtVerify()) as JwtPayload;
+		const userId = hasher.decode(token.id)[0] as number;
+		const result = await db.note.delete({ where: { id: req.params.id, userId } });
+		return result;
+	});
 };

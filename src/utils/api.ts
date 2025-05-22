@@ -73,6 +73,10 @@ export default {
 				throw error;
 			}
 		},
+		async delete(id: number) {
+			if (isLogged()) return app.delete(`/note/${id}`);
+			else throw Error('Not implemented');
+		},
 	},
 	share: {
 		async create(id: number) {
