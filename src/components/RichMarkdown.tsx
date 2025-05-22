@@ -10,7 +10,7 @@ import { toast } from 'react-toastify';
 
 interface Props {
 	note: [Note, React.Dispatch<React.SetStateAction<Note>>];
-	editable: boolean;
+	editable?: boolean;
 }
 
 export default function RichMarkdown({ note: [note, setNote], editable = false }: Props) {

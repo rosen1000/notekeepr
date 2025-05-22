@@ -9,6 +9,7 @@ import { createTheme, CssBaseline, ThemeProvider } from '@mui/material';
 import { green, pink } from '@mui/material/colors';
 import { ToastContainer } from 'react-toastify';
 import './index.css';
+import { Share } from './pages/Share.tsx';
 
 const theme = createTheme({
 	palette: { mode: 'dark', primary: green, secondary: pink },
@@ -28,6 +29,9 @@ createRoot(document.getElementById('root')!).render(
 					<Route index element={<Note />} />
 					<Route path='new' element={<NewNote />} />
 					<Route path=':id' element={<Note />} />
+				</Route>
+				<Route path='share'>
+					<Route path=':link' element={<Share />} />
 				</Route>
 			</Routes>
 		</BrowserRouter>

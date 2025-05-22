@@ -23,7 +23,10 @@ export default (app: typeof main) => {
 	app.get('/:link', { schema: { params: z.object({ link: z.string() }) } }, async (req, res) => {
 		const share = await db.share.findFirst({ where: { link: req.params.link } });
 		if (!share) return res.status(404).send('Share not found.');
-		const note = await db.note.findUnique({ where: { id: share.noteId } });
+		const note = await db.note.findUnique({
+			where: { id: share.noteId },
+			include: { Share: true, user: { select: { username: true } } },
+		});
 		if (!note) return res.status(404).send('Note not found.');
 		res.send(note);
 	});

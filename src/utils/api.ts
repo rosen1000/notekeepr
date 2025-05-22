@@ -83,7 +83,7 @@ export default {
 			return (await app.post<string>('/share', { id })).data;
 		},
 		async get(link: string) {
-			return (await app.get<Note>(`/share/${link}`)).data;
+			return (await app.get<Note & { user: { username: string } }>(`/share/${link}`)).data;
 		},
 		async delete(link: string) {
 			await app.delete(`/share/${link}`);
